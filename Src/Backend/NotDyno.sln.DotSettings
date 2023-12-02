@@ -1,0 +1,7 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=crosspost/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=ebhook/@EntryIndexedValue">True</s:Boolean> <!-- TODO: Removed after https://youtrack.jetbrains.com/issue/RIDER-102746/Typo-in-comment-wrong-octothorpe-handling-in-urls -->
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=elcome/@EntryIndexedValue">True</s:Boolean> <!-- TODO: Removed after https://youtrack.jetbrains.com/issue/RIDER-102746/Typo-in-comment-wrong-octothorpe-handling-in-urls -->
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=Featurable/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=Monetizable/@EntryIndexedValue">True</s:Boolean>
+</wpf:ResourceDictionary>
