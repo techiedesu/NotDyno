@@ -1,5 +1,6 @@
 ﻿open System
 open Microsoft.Data.Sqlite
+open NotDyno.Types
 
 type Snowflake = Guid
 
@@ -23,56 +24,13 @@ let createStorage (connectionString: string) =
 
     tryMigrate, getAllWebhooks
 
-/// https://discord.com/developers/docs/resources/guild#guild-object-system-channel-flags
-[<Flags>]
-type SystemChannelFlags =
-    /// Suppress member join notifications
-    | SuppressJoinNotifications = (1 <<< 0)
-
-    /// Suppress server boost notifications
-    | SuppressPremiumSubscriptions = (1 <<< 1)
-
-    /// Suppress server setup tips
-    | SuppressGuildReminderNotifications = (1 <<< 2)
-
-    /// Hide member join sticker reply buttons
-    | SuppressJoinNotificationReplies = (1 <<< 3)
-
-    /// Suppress role subscription purchase and renewal notifications
-    | SuppressRoleSubscriptionPurchaseNotifications = (1 <<< 4)
-
-    /// Hide role subscription sticker reply buttons
-    | SuppressRoleSubscriptionPurchaseNotificationReplies = (1 <<< 5)
-
-/// https://discord.com/developers/docs/resources/guild#guild-object-mfa-level
-type MfaLevel =
-    /// guild has no MFA/2FA requirement for moderation actions
-    | None = 0
-
-    /// guild has a 2FA requirement for moderation actions
-    | Elevated = 1
-
-/// https://discord.com/developers/docs/resources/guild#guild-object-premium-tier
-type PremiumTier =
-    /// guild has not unlocked any Server Boost perks
-    | None = 0
-
-    /// guild has unlocked Server Boost level 1 perks
-    | Tier1 = 1
-
-    /// guild has unlocked Server Boost level 2 perks
-    | Tier2 = 2
-
-    /// guild has unlocked Server Boost level 3 perks
-    | Tier3 = 3
-
 /// https://discord.com/developers/docs/resources/webhook#webhook-object-webhook-structure
 type WebhookRequest = {
     /// the id of the webhook
     Id: Snowflake
 
     /// the type of the webhook
-    Type: Type
+    Type: WebhookRequestType
 
     /// the guild id this webhook is for, if any
     GuildId: Snowflake option
@@ -105,17 +63,6 @@ type WebhookRequest = {
     /// (returned by the webhooks OAuth2 flow)
     Url: string
 }
-
-and Type =
-    /// Incoming Webhooks can post messages to channels with a generated token
-    | Incoming = 1
-
-    /// Channel Follower Webhooks are internal webhooks used with
-    /// Channel Following to post new messages into channels
-    | ``Channel Follower`` = 2
-
-    /// Application webhooks are webhooks used with Interactions
-    | Application = 3
 
 /// https://discord.com/developers/docs/resources/user#user-object
 and User = {
@@ -174,46 +121,6 @@ and User = {
     AvatarDecoration: string option
 }
 
-and PremiumType =
-    | None = 0
-    | ``Nitro Classic`` = 1
-    | Nitro = 2
-    | ``Nitro Basic`` = 3
-
-and LocaleType =
-    | Indonesian
-    | Danish
-    | German
-    | ``English, UK``
-    | ``English, US``
-    | Spanish
-    | French
-    | Croatian
-    | Italian
-    | Lithuanian
-    | Hungarian
-    | Dutch
-    | Norwegian
-    | Polish
-    | ``Portuguese, Brazilian``
-    | ``Romanian, Romania``
-    | Finnish
-    | Swedish
-    | Vietnamese
-    | Turkish
-    | Czech
-    | Greek
-    | Bulgarian
-    | Russian
-    | Ukrainian
-    | Hindi
-    | Thai
-    | ``Chinese, China``
-    | Japanese
-    | ``Chinese, Taiwan``
-    | Korean
-    | Other of name: string
-
 /// https://discord.com/developers/docs/resources/channel#channel-object
 and Channel = {
     /// the id of this channel
@@ -225,49 +132,6 @@ and Channel = {
     /// the id of the guild (may be missing for some channel objects received over gateway guild dispatches)
     GuidId: Snowflake
 }
-
-/// https://discord.com/developers/docs/resources/channel#channel-object-channel-types
-and ChannelType =
-    /// a text channel within a server
-    | GuildText = 0
-
-    /// a direct message between users
-    | DirectMessage = 1
-
-    /// a voice channel within a server
-    | GuildVoice = 2
-
-    /// a direct message between multiple users
-    | GroupDirectMessage = 3
-
-    /// an organizational category that contains up to 50 channels
-    | GuildCategory = 4
-
-    /// a channel that users can follow and crosspost into their own server
-    /// (formerly news channels)
-    | GuildAnnouncement = 5
-
-    /// a temporary sub-channel within a GUILD_ANNOUNCEMENT channel
-    | AnnouncementThread = 10
-
-    /// temporary sub-channel within a GuildText or GuildForum channel
-    | PublicThread = 11
-
-    /// a temporary sub-channel within a GUILD_TEXT channel that is only
-    /// viewable by those invited and those with the MANAGE_THREADS permission
-    | PrivateThread = 12
-
-    /// a voice channel for hosting events with an audience
-    | GuildStageVoice = 13
-
-    /// the channel in a hub containing the listed servers
-    | GuildDirectory = 14
-
-    /// Channel that can only contain threads
-    | GuildForum = 15
-
-    /// Channel that can only contain threads, similar to GuildForum channels
-    | GuildMedia = 16
 
 /// https://discord.com/developers/docs/resources/channel#overwrite-object
 and Overwrite = {
@@ -431,41 +295,7 @@ and Guild = {
     SafetyAlertsChannelId: Snowflake option
 }
 
-/// https://discord.com/developers/docs/resources/guild#guild-object-verification-level
-and VerificationLevel =
-    /// unrestricted
-    | None = 0
 
-    /// must have verified email on account
-    | Low = 1
-
-    /// must be registered on Discord for longer than 5 minutes
-    | Medium = 2
-
-    /// must be a member of the server for longer than 10 minutes
-    | High = 3
-
-    /// must have a verified phone number
-    | VeryHigh = 4
-
-/// https://discord.com/developers/docs/resources/guild#guild-object-default-message-notification-level
-and MessageNotificationLevel =
-    /// members will receive notifications for all messages by default
-    | AllMessages = 0
-
-    /// members will receive notifications only for messages that @mention them by default
-    | OnlyMentions = 1
-
-/// https://discord.com/developers/docs/resources/guild#guild-object-explicit-content-filter-level
-and ExplicitContentFilterLevel =
-    /// media content will not be scanned
-    | Disabled = 0
-
-    /// media content sent by members without roles will be scanned
-    | MembersWithoutRoles = 1
-
-    /// media content sent by all members will be scanned
-    | AllMembers = 2
 
 /// https://discord.com/developers/docs/topics/permissions#role-object
 and Role = {
@@ -548,94 +378,6 @@ and Emoji = {
     Available: bool option
 }
 
-/// https://discord.com/developers/docs/resources/guild#guild-object-guild-features
-and GuildFeatures =
-    /// guild has access to set an animated guild banner image
-    | AnimatedBanner
-
-    /// guild has access to set an animated guild icon
-    | AnimatedIcon
-
-    /// guild is using the old permissions configuration behavior
-    | ApplicationCommandPermissionsV2
-
-    /// guild has set up auto moderation rules
-    | AutoModeration
-
-    /// guild has access to set a guild banner image
-    | Banner
-
-    /// guild can enable welcome screen,
-    /// Membership Screening, stage channels and discovery,
-    /// and receives community updates
-    | Community
-
-    /// guild has enabled monetization
-    | CreatorMonetizableProvisional
-
-    /// guild has enabled the role subscription promo page
-    | CreatorStorePage
-
-    /// guild has been set as a support server on the App Directory
-    | DeveloperSupportServer
-
-    /// guild is able to be discovered in the directory
-    | Discoverable
-
-    /// guild is able to be featured in the directory
-    | Featurable
-
-    /// guild has paused invites, preventing new users from joining
-    | InvitesDisabled
-
-    /// guild has access to set an invite splash background
-    | InviteSplash
-
-    /// guild has enabled Membership Screening
-    | MemberVerificationGateEnabled
-
-    /// guild has increased custom sticker slots
-    | MoreStickers
-
-    /// guild has access to create announcement channels
-    | News
-
-    /// guild is partnered
-    | Partnered
-
-    /// guild can be previewed before joining
-    /// via Membership Screening or the directory
-    | PreviewEnabled
-
-    /// guild has disabled alerts for join raids
-    /// in the configured safety alerts channel
-    | RaidAlertsDisabled
-
-    /// guild is able to set role icons
-    | RoleIcons
-
-    /// guild has role subscriptions that can be purchased
-    | RoleSubscriptionsAvailableForPurchase
-
-    /// guild has enabled role subscriptions
-    | RoleSubscriptionsEnabled
-
-    /// guild has enabled ticketed events
-    | TicketedEventsEnabled
-
-    /// guild has access to set a vanity URL
-    | VanityUrl
-
-    /// guild is verified
-    | Verified
-
-    /// guild has access to set 384kbps bitrate
-    /// in voice (previously VIP voice servers)
-    | VipRegions
-
-    /// guild has enabled the welcome screen
-    | WelcomeScreenEnabled
-
 /// https://discord.com/developers/docs/resources/guild#welcome-screen-object
 and WelcomeScreen = {
     /// the server description shown in the welcome screen
@@ -658,13 +400,6 @@ and WelcomeScreenChannel = {
     /// or null if no emoji is set
     EmojiName: string option
 }
-
-/// https://discord.com/developers/docs/resources/guild#guild-object-guild-nsfw-level
-and NsfwLevel =
-    | Default = 0
-    | Explicit = 1
-    | Safe = 2
-    | AgeRestricted = 3
 
 /// https://discord.com/developers/docs/resources/sticker#sticker-object
 and Sticker = {
@@ -704,18 +439,3 @@ and Sticker = {
     /// the standard sticker's sort order within its pack
     SortValue: int option
 }
-
-/// https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-types
-and StickerType =
-    /// an official sticker in a pack
-    | Standard = 1
-
-    /// a sticker uploaded to a guild for the guild's members
-    | Guild = 2
-
-/// https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-format-types
-and StickerFormat =
-    | Png = 1
-    | Apng = 2
-    | Lottie = 3
-    | Gif = 4

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
@@ -7,6 +7,20 @@
 
     <ItemGroup>
         <Compile Include="TypeExtensions.fs" />
+        <Compile Include="Types\LocaleType.fs" />
+        <Compile Include="Types\SystemChannelFlags.fs" />
+        <Compile Include="Types\MfaLevel.fs" />
+        <Compile Include="Types\PremiumTier.fs" />
+        <Compile Include="Types\ChannelType.fs" />
+        <Compile Include="Types\GuildFeatures.fs" />
+        <Compile Include="Types\VerificationLevel.fs" />
+        <Compile Include="Types\NsfwLevel.fs" />
+        <Compile Include="Types\StickerFormat.fs" />
+        <Compile Include="Types\StickerType.fs" />
+        <Compile Include="Types\ExplicitContentFilterLevel.fs" />
+        <Compile Include="Types\PremiumType.fs" />
+        <Compile Include="Types\WebhookRequestType.fs" />
+        <Compile Include="Types\MessageNotificationLevel.fs" />
         <Compile Include="Program.fs"/>
     </ItemGroup>
 
